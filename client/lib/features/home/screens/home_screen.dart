@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:client/features/map/screens/map_screen.dart';
 import 'package:client/features/home/widgets/info_card.dart';
 
 /// Uygulamanın ana sayfası.
@@ -58,7 +59,10 @@ class HomeScreen extends StatelessWidget {
                 subtitle:
                     "Google Maps API ile yakındaki yada seçilmiş konumdaki işletmeleri getiren ve gösteren modül.",
                 onTap: () {
-                  // modüle yönlendirme yapılacak.
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => const MapScreen()),
+                  );
                 },
               ),
               const SizedBox(height: 20),
