@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:client/core/config/app_theme.dart';
+import 'package:client/features/home/screens/home_screen.dart';
 
 // Uygulamanın başlangıç noktası.
 void main() => runApp(const R3nzClient());
@@ -34,7 +35,10 @@ class _R3nzClientState extends State<R3nzClient> {
       theme: AppTheme.lightTheme,
       darkTheme: AppTheme.darkTheme,
       themeMode: _currentThemeMode,
-      home: Scaffold(body: Center(child: Text('Hello World!'))),
+      home: HomeScreen(
+        onThemeToggled: _toggleThemeMode,
+        currentThemeMode: _currentThemeMode,
+      ),
     );
   }
 }
