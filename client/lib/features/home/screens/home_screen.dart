@@ -68,8 +68,8 @@ class HomeScreen extends StatelessWidget {
               const SizedBox(height: 20),
               InfoCard(
                 icon: Icons.gamepad_outlined,
-                title: "Test 1",
-                subtitle: "xyz, xyz, xyz, xyz, xyz, xyz, xyz",
+                title: "R3nz Game",
+                subtitle: "Telefondaki sensörleri kullanarak parçakları hareket ettirdiğiz basit bir oyun.",
                 onTap: () {
                   // yönlendirme.
                 },

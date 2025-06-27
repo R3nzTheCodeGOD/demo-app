@@ -7,7 +7,9 @@ import 'package:http/http.dart' as http;
 import 'package:client/features/map/models/place_data.dart';
 
 class PlacesApiService {
-  static const String _apiBaseUrl = "https://10.0.2.2:7234/api";
+  static const String _apiBaseUrl = kDebugMode
+      ? "https://10.0.2.2:7234/api"
+      : "https://192.168.1.2:7234/api";
   static const Duration _apiTimeout = Duration(seconds: 5);
 
   Future<PlaceResponse> fetchPlaces(LatLng location) async {
@@ -20,7 +22,7 @@ class PlacesApiService {
             body: jsonEncode({
               "latitude": location.latitude,
               "longitude": location.longitude,
-              "radius": 1000
+              "radius": 2000,
             }),
           )
           .timeout(_apiTimeout);

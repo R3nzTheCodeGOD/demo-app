@@ -104,7 +104,7 @@ class _MapScreenState extends State<MapScreen> {
         SnackBarType.success,
       );
       final controller = await _controller.future;
-      await controller.animateCamera(CameraUpdate.zoomTo(9.0));
+      await controller.animateCamera(CameraUpdate.zoomOut());
     } catch (e) {
       SnackbarHelper.show(
         context,
@@ -180,7 +180,7 @@ class _MapScreenState extends State<MapScreen> {
     final controller = await _controller.future;
     controller.animateCamera(
       CameraUpdate.newCameraPosition(
-        CameraPosition(target: location, zoom: 17.0),
+        CameraPosition(target: location, zoom: 14.0),
       ),
     );
   }
@@ -224,6 +224,7 @@ class _MapScreenState extends State<MapScreen> {
           children: [
             GoogleMap(
               style: (Theme.of(context).brightness == Brightness.dark) ? darkMap : lightMap,
+              indoorViewEnabled: true,
               mapType: MapType.normal,
               initialCameraPosition: _initialCameraPosition,
               onMapCreated: (controller) => _controller.complete(controller),
