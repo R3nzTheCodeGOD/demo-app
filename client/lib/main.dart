@@ -1,12 +1,31 @@
+import 'dart:io';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:client/core/config/app_theme.dart';
 import 'package:client/features/home/screens/home_screen.dart';
 
-// Uygulamanın başlangıç noktası.
-void main() => runApp(const R3nzClient());
+class MyHttpOverrides extends HttpOverrides {
+  @override
+  HttpClient createHttpClient(SecurityContext? context) {
+    return super.createHttpClient(context)
+      ..badCertificateCallback =
+          ((X509Certificate cert, String host, int port) {
+            // Debug'da sertifika doğrulamayı atla
+            if (kDebugMode) {
+              debugPrint('DEBUG: Sertifika doğrulama atlandı => $host:$port');
+              return true; // Güvenli olmayan sertifikalara izin ver
+            }
+            return false; // Sertifika geçerli değilse izin verme
+          });
+  }
+}
+
+void main() {
+  HttpOverrides.global = MyHttpOverrides();
+  runApp(const R3nzClient());
+}
 
 /// Ana uygulama widget'ı.
-/// Tema yönetimi ve başlangıç sayfasını merkezi olarak yöneticek.
 class R3nzClient extends StatefulWidget {
   const R3nzClient({super.key});
 

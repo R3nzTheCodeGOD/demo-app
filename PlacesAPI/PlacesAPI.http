@@ -1,0 +1,16 @@
+@PlacesAPI_HostAddress = http://localhost:5161
+
+POST {{PlacesAPI_HostAddress}}/api/getPlaces
+Content-Type: application/json
+Accept: application/json
+
+{
+    "latitude": 41.015137,
+    "longitude": 28.979530,
+    "radius": 2000,
+    "languageCode": "tr",
+    "maxResults": 20,
+    "withGoogle": true
+}
+
+###

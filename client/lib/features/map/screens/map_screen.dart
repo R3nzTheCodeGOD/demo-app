@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:client/core/constants/constants.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:client/core/services/location_service.dart';
@@ -222,6 +223,7 @@ class _MapScreenState extends State<MapScreen> {
         child: Stack(
           children: [
             GoogleMap(
+              style: (Theme.of(context).brightness == Brightness.dark) ? darkMap : lightMap,
               mapType: MapType.normal,
               initialCameraPosition: _initialCameraPosition,
               onMapCreated: (controller) => _controller.complete(controller),
