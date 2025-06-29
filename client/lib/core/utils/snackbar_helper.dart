@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-/// SnackBar gösterme mantığını merkezileştiren yardımcı sınıf.
+/// Merkezi SnackBar sınıfı.
 enum SnackBarType { success, error, info }
 
 class SnackbarHelper {
@@ -27,7 +27,7 @@ class SnackbarHelper {
         content: Text(message),
         backgroundColor: backgroundColor,
         behavior: SnackBarBehavior.floating,
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
         margin: EdgeInsets.all(MediaQuery.of(context).size.width * 0.05),
       ),
     );

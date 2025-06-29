@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:client/features/home/widgets/interactive_card.dart';
 
-/// Ana sayfada bir özelliği temsil eden bilgi kartı widget'ı.
+/// Ana sayfada bir özelliği temsil eden kart widget'i.
 class InfoCard extends StatelessWidget {
   final IconData icon;
   final String title;
@@ -25,38 +25,21 @@ class InfoCard extends StatelessWidget {
       onTap: onTap,
       padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 20.0),
       child: Row(
-        children: [
-          Icon(icon, size: 40, color: colorScheme.primary),
+        children: <Widget>[
+          Icon(icon, size: 45, color: colorScheme.primary),
           const SizedBox(width: 20),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(
-                  title,
-                  style: textTheme.titleLarge?.copyWith(
-                    fontWeight: FontWeight.bold,
-                    color: colorScheme.onSurface,
-                  ),
-                ),
+                Text(title, style: textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold, color: colorScheme.onSurface)),
                 const SizedBox(height: 4),
-                Text(
-                  subtitle,
-                  style: textTheme.bodyMedium?.copyWith(
-                    color: colorScheme.onSurfaceVariant,
-                  ),
-                  maxLines: 3,
-                  overflow: TextOverflow.ellipsis,
-                ),
+                Text(subtitle, style: textTheme.bodyMedium?.copyWith(color: colorScheme.onSurfaceVariant), maxLines: 3),
               ],
             ),
           ),
           const SizedBox(width: 10),
-          Icon(
-            Icons.arrow_forward_ios_rounded,
-            size: 20,
-            color: colorScheme.onSurfaceVariant.withOpacity(0.6),
-          ),
+          Icon(Icons.arrow_forward_ios_rounded, size: 20, color: colorScheme.onSurfaceVariant.withAlpha(150)),
         ],
       ),
     );

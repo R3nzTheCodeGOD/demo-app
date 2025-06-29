@@ -20,8 +20,7 @@ class MapScreen extends StatefulWidget {
 }
 
 class _MapScreenState extends State<MapScreen> {
-  final Completer<GoogleMapController> _controller =
-      Completer<GoogleMapController>();
+  final Completer<GoogleMapController> _controller = Completer<GoogleMapController>();
   final Set<Marker> _markers = {};
 
   final LocationService _locationService = LocationService();
@@ -29,20 +28,16 @@ class _MapScreenState extends State<MapScreen> {
 
   MapScreenState _screenState = MapScreenState.idle;
 
-  static const CameraPosition _initialCameraPosition = CameraPosition(
-    target: LatLng(41.0054, 28.8473),
-    zoom: 9.0,
-  );
+  // FSM Köprüsü
+  static const CameraPosition _initialCameraPosition = CameraPosition(target: LatLng(41.091150, 29.061505), zoom: 10.0);
 
   @override
   void initState() {
     super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      _getCurrentLocation();
-    });
+    WidgetsBinding.instance.addPostFrameCallback((_) => _getCurrentLocation());
   }
 
-  void _setScreenState(MapScreenState state) {
+  Future<void> _setScreenState(MapScreenState state) async {
     if (mounted) setState(() => _screenState = state);
   }
 
@@ -56,39 +51,34 @@ class _MapScreenState extends State<MapScreen> {
 
       setState(() {
         _updateSimpleMarker(
-          id: 'currentLocation',
+          id: "currentLocation",
           location: currentLocation,
-          title: 'Konumunuz',
+          title: "Konumunuz",
           hue: BitmapDescriptor.hueAzure,
-          onTapAction: () =>
-              _showLocationActionBottomSheet(currentLocation, 'current'),
+          onTapAction: () => _showLocationActionBottomSheet(currentLocation, "current"),
         );
       });
 
       _animateToLocation(currentLocation);
-      SnackbarHelper.show(
-        context,
-        'Konumunuza yakınlaşıldı.',
-        SnackBarType.success,
-      );
+      SnackbarHelper.show(context, "Konumunuza yakınlaşıldı.", SnackBarType.success);
     } catch (e) {
-      SnackbarHelper.show(context, 'Konum alınamadı: $e', SnackBarType.error);
+      SnackbarHelper.show(context, "Konum alınamadı: $e", SnackBarType.error);
     } finally {
       _setScreenState(MapScreenState.idle);
     }
   }
 
-  void _onMapLongPress(LatLng latLng) {
+  Future<void> _onMapLongPress(LatLng latLng) async {
     setState(() {
       _updateSimpleMarker(
-        id: 'selectedLocation',
+        id: "selectedLocation",
         location: latLng,
-        title: 'Seçilen Konum',
-        hue: BitmapDescriptor.hueOrange,
-        onTapAction: () => _showLocationActionBottomSheet(latLng, 'selected'),
+        title: "Seçilen Konum",
+        hue: BitmapDescriptor.hueViolet,
+        onTapAction: () => _showLocationActionBottomSheet(latLng, "selected"),
       );
     });
-    SnackbarHelper.show(context, 'Konum seçildi.', SnackBarType.info);
+    SnackbarHelper.show(context, "Konum seçildi.", SnackBarType.info);
   }
 
   Future<void> _fetchPlacesNearby(LatLng location) async {
@@ -98,43 +88,30 @@ class _MapScreenState extends State<MapScreen> {
     try {
       final placeResponse = await _placesApiService.fetchPlaces(location);
       await _updatePlaceMarkers(placeResponse.places);
-      SnackbarHelper.show(
-        context,
-        '${placeResponse.places.length} işletme bulundu.',
-        SnackBarType.success,
-      );
+      SnackbarHelper.show(context, "${placeResponse.places.length} yer bulundu.", SnackBarType.success);
       final controller = await _controller.future;
-      await controller.animateCamera(CameraUpdate.zoomOut());
+      if (await controller.getZoomLevel() > 14.5) controller.animateCamera(CameraUpdate.zoomTo(14.5));
     } catch (e) {
-      SnackbarHelper.show(
-        context,
-        'İşletmeler yüklenemedi: ${e.toString()}',
-        SnackBarType.error,
-      );
+      SnackbarHelper.show(context, "Yerler yüklenemedi: ${e.toString()}", SnackBarType.error);
     } finally {
       _setScreenState(MapScreenState.idle);
     }
   }
 
-  // Standart (basit) marker'lar için yardımcı metot.
-  void _updateSimpleMarker({
+  Future<void> _updateSimpleMarker({
     required String id,
     required LatLng location,
     required String title,
     required double hue,
     VoidCallback? onTapAction,
-  }) {
+  }) async {
     final markerId = MarkerId(id);
     _markers.removeWhere((m) => m.markerId == markerId);
     _markers.add(
       Marker(
         markerId: markerId,
         position: location,
-        infoWindow: InfoWindow(
-          title: title,
-          snippet:
-              'Enlem: ${location.latitude.toStringAsFixed(4)}, Boylam: ${location.longitude.toStringAsFixed(4)}',
-        ),
+        infoWindow: InfoWindow(title: title, snippet: "Enlem: ${location.latitude}, Boylam: ${location.longitude}"),
         icon: BitmapDescriptor.defaultMarkerWithHue(hue),
         onTap: onTapAction,
       ),
@@ -142,11 +119,7 @@ class _MapScreenState extends State<MapScreen> {
   }
 
   Future<void> _updatePlaceMarkers(List<Place> places) async {
-    _markers.removeWhere(
-      (m) =>
-          m.markerId.value != 'currentLocation' &&
-          m.markerId.value != 'selectedLocation',
-    );
+    _markers.removeWhere((m) => m.markerId.value != "currentLocation" && m.markerId.value != "selectedLocation");
 
     for (final place in places) {
       try {
@@ -178,47 +151,32 @@ class _MapScreenState extends State<MapScreen> {
 
   Future<void> _animateToLocation(LatLng location) async {
     final controller = await _controller.future;
-    controller.animateCamera(
-      CameraUpdate.newCameraPosition(
-        CameraPosition(target: location, zoom: 14.0),
-      ),
-    );
+    controller.animateCamera(CameraUpdate.newCameraPosition(CameraPosition(target: location, zoom: 15.0)));
   }
 
-  void _showLocationActionBottomSheet(LatLng location, String type) {
-    showModalBottomSheet(
-      context: context,
-      builder: (ctx) => LocationActionBottomSheet(
-        location: location,
-        type: type,
-        onFetchPlaces: _fetchPlacesNearby,
-      ),
-    );
+  Future<void> _showLocationActionBottomSheet(LatLng location, String type) async {
+    showModalBottomSheet(context: context, useSafeArea: true, builder: (ctx) => LocationActionBottomSheet(location: location, type: type, onFetchPlaces: _fetchPlacesNearby));
   }
 
-  void _showPlaceDetailsBottomSheet(Place place) {
-    showModalBottomSheet(
-      context: context,
-      isScrollControlled: true,
-      builder: (ctx) => PlaceDetailsBottomSheet(place: place),
-    );
+  Future<void> _showPlaceDetailsBottomSheet(Place place) async {
+    showModalBottomSheet(context: context, isScrollControlled: true, useSafeArea: true, builder: (ctx) => PlaceDetailsBottomSheet(place: place));
   }
 
   String get _loadingMessage {
     switch (_screenState) {
       case MapScreenState.loadingLocation:
-        return 'Konum Alınıyor...';
+        return "Konum Alınıyor...";
       case MapScreenState.loadingPlaces:
-        return 'İşletmeler Yükleniyor...';
+        return "Yerler Yükleniyor...";
       case MapScreenState.idle:
-        return '';
+        return "";
     }
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('NarPOS Haritalar')),
+      appBar: AppBar(title: const Text("Harita")),
       body: SafeArea(
         child: Stack(
           children: [
@@ -233,19 +191,14 @@ class _MapScreenState extends State<MapScreen> {
             ),
             if (_screenState != MapScreenState.idle)
               Container(
-                color: Theme.of(
-                  context,
-                ).scaffoldBackgroundColor.withAlpha(200),
+                color: Theme.of(context).scaffoldBackgroundColor.withAlpha(200),
                 child: Center(
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
+                    children: <Widget>[
                       const CircularProgressIndicator(),
                       const SizedBox(height: 20),
-                      Text(
-                        _loadingMessage,
-                        style: Theme.of(context).textTheme.titleMedium,
-                      ),
+                      Text(_loadingMessage, style: Theme.of(context).textTheme.titleMedium),
                     ],
                   ),
                 ),
@@ -253,10 +206,7 @@ class _MapScreenState extends State<MapScreen> {
           ],
         ),
       ),
-      floatingActionButton: FloatingActionButton.extended(
-        onPressed: _getCurrentLocation,
-        label: const Icon(Icons.my_location),
-      ),
+      floatingActionButton: FloatingActionButton.extended(label: const Icon(Icons.my_location), onPressed: _getCurrentLocation),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
     );
   }

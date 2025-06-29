@@ -4,30 +4,23 @@ import 'package:geolocator/geolocator.dart';
 class LocationService {
   /// Cihazın mevcut konumunu, izinleri kontrol ederek alır.
   Future<Position> determinePosition() async {
-    bool serviceEnabled;
-    LocationPermission permission;
-
-    serviceEnabled = await Geolocator.isLocationServiceEnabled();
+    var serviceEnabled = await Geolocator.isLocationServiceEnabled();
     if (!serviceEnabled) {
-      return Future.error('Konum servisleri devre dışı.');
+      return Future.error("Konum servisleri devre dışı.");
     }
 
-    permission = await Geolocator.checkPermission();
+    var permission = await Geolocator.checkPermission();
     if (permission == LocationPermission.denied) {
       permission = await Geolocator.requestPermission();
       if (permission == LocationPermission.denied) {
-        return Future.error('Konum izinleri reddedildi.');
+        return Future.error("Konum izinleri reddedildi.");
       }
     }
 
     if (permission == LocationPermission.deniedForever) {
-      return Future.error(
-        'Konum izinleri kalıcı olarak reddedildi. Lütfen uygulama ayarlarından izin verin.',
-      );
+      return Future.error("Konum izinleri kalıcı olarak reddedildi. Lütfen uygulama ayarlarından izin verin.");
     }
 
-    return await Geolocator.getCurrentPosition(
-      locationSettings: const LocationSettings(accuracy: LocationAccuracy.best),
-    );
+    return await Geolocator.getCurrentPosition(locationSettings: const LocationSettings(accuracy: LocationAccuracy.best));
   }
 }
