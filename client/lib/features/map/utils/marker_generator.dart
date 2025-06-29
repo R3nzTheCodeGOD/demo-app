@@ -15,8 +15,8 @@ class MarkerGenerator {
     required String? hexColor,
     double width = 125,
     double textSize = 12.5,
-    double iconHeight = 13,
-    double iconWidth = 13,
+    double iconHeight = 12.5,
+    double iconWidth = 12.5,
     double iconCircleDiameter = 25,
   }) async {
     // Google renkleri Alpha değeri olmadan gönderiyor.

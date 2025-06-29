@@ -2,6 +2,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:client/core/config/app_theme.dart';
 import 'package:client/features/home/screens/home_screen.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 // backendde sertifika yok
 class MyHttpOverrides extends HttpOverrides {
@@ -13,7 +14,9 @@ class MyHttpOverrides extends HttpOverrides {
 }
 
 void main() {
+  WidgetsFlutterBinding.ensureInitialized();
   HttpOverrides.global = MyHttpOverrides();
+  dotenv.load(fileName: ".env");
   runApp(const R3nzClient());
 }
 
