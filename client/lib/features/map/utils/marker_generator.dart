@@ -54,7 +54,7 @@ class MarkerGenerator {
                       fontSize: textSize,
                       foreground: Paint()
                         ..style = PaintingStyle.stroke
-                        ..strokeWidth = 2
+                        ..strokeWidth = 1
                         ..color = paint,
                     ),
                   ),

@@ -29,6 +29,7 @@ class SnackbarHelper {
         behavior: SnackBarBehavior.floating,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
         margin: EdgeInsets.all(MediaQuery.of(context).size.width * 0.05),
+        duration: Duration(seconds: 1),
       ),
     );
   }

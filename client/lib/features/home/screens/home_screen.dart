@@ -43,7 +43,7 @@ class HomeScreen extends StatelessWidget {
                 icon: Icons.pin_drop_outlined,
                 title: "Harita",
                 subtitle: "Google Maps API ile yakındaki yada seçilmiş konumdaki yerleri getiren ve gösteren modül.",
-                onTap: () => Navigator.push(context, MaterialPageRoute(builder: (ctx) => const MapScreen())),
+                onTap: () => Navigator.push(context, MaterialPageRoute(builder: (ctx) => MapScreen(onThemeToggled: onThemeToggled,))),
               ),
               const SizedBox(height: 20),
               InfoCard(

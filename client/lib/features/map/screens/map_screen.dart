@@ -13,7 +13,9 @@ import 'package:client/features/map/widgets/place_details_bottom_sheet.dart';
 enum MapScreenState { idle, loadingLocation, loadingPlaces }
 
 class MapScreen extends StatefulWidget {
-  const MapScreen({super.key});
+  final VoidCallback onThemeToggled;
+  
+  const MapScreen({super.key, required this.onThemeToggled});
 
   @override
   State<MapScreen> createState() => _MapScreenState();
@@ -26,7 +28,8 @@ class _MapScreenState extends State<MapScreen> {
   final LocationService _locationService = LocationService();
   final PlacesApiService _placesApiService = PlacesApiService();
 
-  MapScreenState _screenState = MapScreenState.idle;
+  var _screenState = MapScreenState.idle;
+  var _isTrafficEnabled = false;
 
   // FSM Köprüsü
   static const CameraPosition _initialCameraPosition = CameraPosition(target: LatLng(41.091150, 29.061505), zoom: 10.0);
@@ -39,6 +42,11 @@ class _MapScreenState extends State<MapScreen> {
 
   Future<void> _setScreenState(MapScreenState state) async {
     if (mounted) setState(() => _screenState = state);
+  }
+
+  Future<void> _toggleTraffic() async {
+    setState(() => _isTrafficEnabled = !_isTrafficEnabled);
+    SnackbarHelper.show(context,_isTrafficEnabled ? "Trafik açıldı!" : "Trafik kapandı!", SnackBarType.info);
   }
 
   Future<void> _getCurrentLocation() async {
@@ -74,7 +82,7 @@ class _MapScreenState extends State<MapScreen> {
         id: "selectedLocation",
         location: latLng,
         title: "Seçilen Konum",
-        hue: BitmapDescriptor.hueViolet,
+        hue: BitmapDescriptor.hueRed,
         onTapAction: () => _showLocationActionBottomSheet(latLng, "selected"),
       );
     });
@@ -176,13 +184,30 @@ class _MapScreenState extends State<MapScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text("Harita")),
+      appBar: AppBar(
+        title: const Text("Harita"),
+        actions: [
+          IconButton(
+            icon: Icon(_isTrafficEnabled ? Icons.traffic_outlined : Icons.layers_clear_outlined),
+            onPressed: _toggleTraffic,
+            tooltip: _isTrafficEnabled ? "Trafiği Kapat" : "Trafiği Aç",
+          ),
+          IconButton(
+            icon: Icon(Theme.of(context).brightness == Brightness.light ? Icons.wb_sunny : Icons.mode_night),
+            tooltip: Theme.of(context).brightness == Brightness.light ? "Koyu Tema" : "Açık Tema",
+            onPressed: widget.onThemeToggled,
+          ),
+        ],
+      ),
       body: SafeArea(
         child: Stack(
           children: [
             GoogleMap(
               style: (Theme.of(context).brightness == Brightness.dark) ? darkMap : lightMap,
               indoorViewEnabled: true,
+              myLocationEnabled: true,
+              myLocationButtonEnabled: false,
+              trafficEnabled: _isTrafficEnabled,
               mapType: MapType.normal,
               initialCameraPosition: _initialCameraPosition,
               onMapCreated: (controller) => _controller.complete(controller),
@@ -206,8 +231,17 @@ class _MapScreenState extends State<MapScreen> {
           ],
         ),
       ),
-      floatingActionButton: FloatingActionButton.extended(label: const Icon(Icons.my_location), onPressed: _getCurrentLocation),
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
+      floatingActionButton: Padding(
+        padding: EdgeInsetsGeometry.only(top: 75),
+        child: FloatingActionButton(
+          mini: true,
+          shape: CircleBorder(),
+          onPressed: _getCurrentLocation,
+          tooltip: "Konumumu Bul",
+          child: const Icon(Icons.my_location),
+        )
+      ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.miniEndTop,
     );
   }
 }
