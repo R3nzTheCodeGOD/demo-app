@@ -5,7 +5,7 @@
 
 Bu projeyi, **NarPOS firmasında işe alım sürecim için özel olarak geliştirdim.** Projeye başlarken kullanılan tüm diller ve teknolojiler bana yabancıydı; **12 gün içinde sıfırdan öğrenilerek bu proje ortaya çıkarıldı.** Bu bir demo ve eğitim projesi niteliğindedir, bu nedenle bazı eksikleri veya geliştirilebilecek yönleri olabilir.
 
-<video src="assets/app_video.mp4" muted autoplay loop width="400"></video>
+![App](assets/pre.gif)
 
 ---
 
@@ -62,17 +62,22 @@ Flutter ve ASP.NET Core tabanlı bir mobil uygulamadır. Uygulama, kullanıcın�
 
 ## 📸 Ekran Görüntüleri
 
-### Karanlık Mod
 <center>
-<img src="assets/home_dark.png" alt="Home Dark Mode" width="200"/>
-<img src="assets/map_dark.png" alt="Home Light Mode" width="200"/>
-<img src="assets/place_dark.png" alt="Home Light Mode" width="200"/>
-</center>
 
-### Aydınlık Mod
-<center>
-<img src="assets/home_light.png" alt="Home Dark Mode" width="200"/>
-<img src="assets/map_light.png" alt="Home Light Mode" width="200"/>
-<img src="assets/place_light.png" alt="Home Light Mode" width="200"/>
+## Karanlık Mod
+
+<p>
+    <img src="assets/home_dark.png" alt="Home Dark Mode" width="200"/>
+    <img src="assets/map_dark.png" alt="Home Light Mode" width="200"/>
+    <img src="assets/place_dark.png" alt="Home Light Mode" width="200"/>
+</p>
+
+## Aydınlık Mod
+
+<p>
+    <img src="assets/home_light.png" alt="Home Dark Mode" width="200"/>
+    <img src="assets/map_light.png" alt="Home Light Mode" width="200"/>
+    <img src="assets/place_light.png" alt="Home Light Mode" width="200"/>
+</p>
+
 </center>
----
