@@ -13,8 +13,8 @@ class Wall extends BodyComponent {
 
     final fixtureDef = FixtureDef(
       shape,
-      friction: 0.3, // Duvar sürtünmesi
-      restitution: 0.1, // Duvar esnekliği
+      friction: 0.1, // Duvar sürtünmesi
+      restitution: 0.3, // Duvar esnekliği
     );
 
     final bodyDef = BodyDef(
